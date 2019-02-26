@@ -1,4 +1,4 @@
-public class StringStackArray {
+public class StringStackArray implements StringStack {
 
   private String[] stack;
   private int head;

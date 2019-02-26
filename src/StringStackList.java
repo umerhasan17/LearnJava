@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class StringStackList {
+public class StringStackList implements StringStack {
 
   private List<String> stack;
 
