@@ -59,10 +59,8 @@ public class ListArrayBased<T> implements ListInterface<T> {
 	 */
 	public void add(int givenPosition, T newItem)
 			throws ListIndexOutOfBoundsException {
-	    if (givenPosition >= 1 && givenPosition <= MAX_LIST) {
-	    	if (givenPosition <= length) {
-					makeRoom(givenPosition);
-				}
+	    if (givenPosition >= 1 && givenPosition <= length + 1) {
+				makeRoom(givenPosition);
 	    	list[translate(givenPosition)] = newItem;
 	    	length += 1;
 			} else {

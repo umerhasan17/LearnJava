@@ -32,6 +32,7 @@ public class NineTailsWeightedGraph {
       // sort by weight
 
       configurations.add(i, parents);
+//      printParentsTest(i);
     }
   }
 
@@ -226,24 +227,55 @@ public class NineTailsWeightedGraph {
     ListInterface<PriorityQueueInterface<WeightedEdge>> confCopy = getConfigurationsCopy();
 
     final int target = TERMINAL_CONFIGURATION_INDEX;
-    visited.add(target, target);
+    visited.add(1, target);
     costs[target] = 0;
     nextMoves[target] = -1;
-    int currentChild = target;
+
     while (visited.size() < NUM_CONFIGURATIONS) {
-      // v is unvisited parent of u
-      // c = costs[u] + weight(v, u)
-      // no other triplet with u in visited with smaller c
-        PriorityQueueInterface<WeightedEdge> parents =
-                generateParents(visited.get(currentChild));
-        // min heap structure so smallest elem should be at the top
-        WeightedEdge parent = parents.peek();
-        int minWeight = parent.weight;
-        visited.add(parent.parent, parent.parent);
-        costs[parent.parent] = costs[parent.child] + minWeight;
-        nextMoves[parent.parent] = parent.child;
-        currentChild = parent.parent;
+      int minCost = Integer.MAX_VALUE;
+      int minChild = 0;
+      int minParent = 0;
+      for (int u = 1; u <= NUM_CONFIGURATIONS; u++) {
+        if (visited.contains(u)) {
+          PriorityQueueInterface<WeightedEdge> edges = confCopy.get(u);
+          while (!edges.isEmpty()) {
+            WeightedEdge edge = edges.peek();
+            int v = edge.parent;
+            if (!visited.contains(v)) {
+              int c = costs[u] + edge.weight;
+              if (c < minCost) {
+                minCost = c;
+                minChild = u;
+                minParent = v;
+              }
+              break;
+            }
+            edges.remove();
+          }
+        }
+      }
+      visited.add(visited.size() + 1, minParent);
+      costs[minParent] = minCost;
+      nextMoves[minParent] = minChild;
     }
+
+//    int currentChild = target;
+//    while (visited.size() < NUM_CONFIGURATIONS) {
+//      // v is unvisited parent of u
+//      // c = costs[u] + weight(v, u)
+//      // no other triplet with u in visited with smaller c
+//        PriorityQueueInterface<WeightedEdge> parents =
+//                generateParents(visited.get(currentChild));
+//        // min heap structure so smallest elem should be at the top
+//        WeightedEdge parent = parents.peek();
+//        int minWeight = parent.weight;
+//        visited.add(parent.parent, parent.parent);
+//        costs[parent.parent] = costs[parent.child] + minWeight;
+//        nextMoves[parent.parent] = parent.child;
+//        currentChild = parent.parent;
+//    }
+
+    mst = new MinimumSpanningTree(nextMoves, costs);
   }
 
   // *** helper classes

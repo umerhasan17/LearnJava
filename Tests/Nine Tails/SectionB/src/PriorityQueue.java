@@ -54,8 +54,12 @@ public class PriorityQueue<T extends Comparable<T>> implements
 	public void add(T newEntry) throws PQException {
 	    if (size < max_size) {
 				items[size] = newEntry;
+				int currentIndex = size;
 				size ++;
-				PQRebuild(0);
+				while (currentIndex > 0 && items[currentIndex].compareTo(items[(currentIndex - 1) / 2]) < 0) {
+					swap(currentIndex, (currentIndex - 1) / 2);
+					currentIndex--;
+				}
 			} else {
 	    	throw new PQException("Queue full.");
 			}
@@ -77,22 +81,42 @@ public class PriorityQueue<T extends Comparable<T>> implements
 	 * <strong>Implement this method for Question 2</strong>
 	 */
 	private void PQRebuild(int root) {
-	    int left = 2 * root + 1;
-	    int right = 2 * root + 2;
-	    // check left
-			if (items[left] != null) {
-				while (left < max_size && items[left].compareTo(items[root]) < 0) {
-					PQRebuild(left);
-					swap(left, root);
-				}
+//	    int left = 2 * root + 1;
+//	    int right = 2 * root + 2;
+//	    // check left
+//			if (items[left] != null) {
+//				while (left < max_size && items[left].compareTo(items[root]) < 0) {
+//					PQRebuild(left);
+//					swap(left, root);
+//				}
+//			}
+//			// check right
+//			if (items[right] != null) {
+//				while (right < max_size && items[right].compareTo(items[root]) < 0) {
+//					PQRebuild(right);
+//					swap(right, root);
+//				}
+//			}
+
+		int i = root;
+		while ((2 * i + 2) < size &&
+						(items[i].compareTo(items[2 * i + 1]) > 0 || items[i].compareTo(items[2 * i + 2]) > 0)) {
+			int minChildIndex;
+			if (items[2 * i + 1].compareTo(items[2 * i + 2]) <= 0) {
+				minChildIndex = 2 * i + 1;
+			} else {
+				minChildIndex = 2 * i + 2;
 			}
-			// check right
-			if (items[right] != null) {
-				while (right < max_size && items[right].compareTo(items[root]) < 0) {
-					PQRebuild(right);
-					swap(right, root);
-				}
-			}
+			T itemsI = items[i];
+			items[i] = items[minChildIndex];
+			items[minChildIndex] = itemsI;
+			i = minChildIndex;
+		}
+		if ((2 * i + 1) < size && items[i].compareTo(items[2 * i + 1]) > 0) {
+			T itemsI = items[i];
+			items[i] = items[2 * i + 1];
+			items[2 * i + 1] = itemsI;
+		}
 	}
 
 	private void swap(int i, int j) {
