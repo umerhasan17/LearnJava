@@ -1,6 +1,8 @@
 package generalmatrices.matrix;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BinaryOperator;
 
 public class Matrix<T> {
 
@@ -40,5 +42,39 @@ public class Matrix<T> {
     }
     res += "]";
     return res;
+  }
+
+  public Matrix<T> sum(Matrix<T> other, BinaryOperator<T> elementSum) {
+    List<T> matrix = new ArrayList<>();
+    for (int i = 0; i < getOrder(); i ++) {
+      for (int j = 0; j < getOrder(); j ++) {
+        matrix.add(elementSum.apply(this.get(i, j), other.get(i, j)));
+      }
+    }
+    return new Matrix<>(matrix);
+  }
+
+  public Matrix<T> product(Matrix<T> other, BinaryOperator<T> elementSum,
+                             BinaryOperator<T> elementProduct) {
+    List<T> matrix = new ArrayList<>();
+
+    for (int i = 0; i < getOrder(); i ++) {
+      for (int j = 0; j < getOrder(); j++) {
+        T accumulator = null;
+        for (int k = 0; k < getOrder(); k++) {
+          T product = elementProduct.apply(this.get(i, k), other.get(k, j));
+          if (accumulator == null) {
+            accumulator = product;
+          } else {
+            accumulator = elementSum.apply(accumulator, product);
+          }
+        }
+        matrix.add(accumulator);
+      }
+    }
+
+
+
+    return new Matrix<>(matrix);
   }
 }
