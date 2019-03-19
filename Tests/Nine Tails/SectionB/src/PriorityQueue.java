@@ -80,14 +80,18 @@ public class PriorityQueue<T extends Comparable<T>> implements
 	    int left = 2 * root + 1;
 	    int right = 2 * root + 2;
 	    // check left
-	    while (items[left].compareTo(items[root]) < 0  && left < max_size) {
-	    	PQRebuild(left);
-				swap(left, root);
+			if (items[left] != null) {
+				while (left < max_size && items[left].compareTo(items[root]) < 0) {
+					PQRebuild(left);
+					swap(left, root);
+				}
 			}
 			// check right
-			while (items[right].compareTo(items[root]) < 0  && right < max_size) {
-				PQRebuild(right);
-				swap(right, root);
+			if (items[right] != null) {
+				while (right < max_size && items[right].compareTo(items[root]) < 0) {
+					PQRebuild(right);
+					swap(right, root);
+				}
 			}
 	}
 
