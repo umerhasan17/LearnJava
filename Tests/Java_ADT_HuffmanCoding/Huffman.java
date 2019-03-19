@@ -1,3 +1,6 @@
+import java.util.HashMap;
+import java.util.Map;
+
 public class Huffman {
 
 	private HuffmanData[] leafEntries;
@@ -32,16 +35,37 @@ public class Huffman {
 	}
 
 	public void createHuffmanTree() {
-	// Process PriorityQueue pq until there is a complete HuffmanTree
-	// ADD YOUR CODE HERE
+		// Process PriorityQueue pq until there is a complete HuffmanTree
+		while (pq.getSize() > 1) {
+			BinaryTreeInterface<HuffmanData> b1 = pq.removeMin();
+			BinaryTreeInterface<HuffmanData> b2 = pq.removeMin();
+			HuffmanData newRootData =
+							new HuffmanData(b1.getRootData().getFrequency() +
+											b2.getRootData().getFrequency());
+			BinaryTreeInterface<HuffmanData> newB =
+							new BinaryTree<HuffmanData>(newRootData,
+											(BinaryTree) b1,
+											(BinaryTree) b2);
+			pq.add(newB);
+		}
+		huffmanTree = pq.getMin();
 	}
 
 	public void printCode() {
-	// ADD YOUR CODE HERE. 
+		printCodeProcedure("", huffmanTree);
 	}
 
 	private void printCodeProcedure(String code, BinaryTreeInterface<HuffmanData> tree) {
-	// Print out a complete HuffmanTree 
-        // ADD YOUR CODE HERE
+	// Print out a complete HuffmanTree
+				if (tree == null) {
+
+				} else {
+					printCodeProcedure(code + "0", tree.getLeftSubtree());
+					printCodeProcedure(code + "1", tree.getRightSubtree());
+					if (tree.getRootData().getSymbol() != '\u0000') {
+						System.out.println(tree.getRootData().getSymbol() + ": " + code);
+					}
+				}
+
 	}
 }

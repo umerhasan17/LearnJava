@@ -28,7 +28,17 @@ public class PriorityQueue<E extends Comparable<E>> implements PriorityQueueInte
 	public void add(E newEntry) throws PriorityQueueException{
 	// post: Adds a new entry to the priority queue according to 
         // the priority value.
-	// ADD YOUR CODE HERE
+	if (size < max_size) {
+		items[size] = newEntry;
+		size ++;
+		int i = size - 1;
+		while (i > 0 && items[i].compareTo(items[(i - 1) / 2]) < 0) {
+			swap(i, (i - 1) / 2);
+			i --;
+		}
+	} else {
+		throw new PriorityQueueException("Queue full.");
+	}
 	}
  				
  	public E removeMin(){
@@ -43,8 +53,36 @@ public class PriorityQueue<E extends Comparable<E>> implements PriorityQueueInte
 		return root;
 	}
 	
-	private void heapRebuild(int root){
-	// Rebuild heap to keep it ordered
-	// ADD YOUR CODE HERE
+	private void heapRebuild(int root) {
+		// Rebuild heap to keep it ordered
+		int i = root;
+		int left = i * 2 + 1;
+		int right = i * 2 + 2;
+		int minChild = -1;
+		while (right < size &&
+					(items[right].compareTo(items[i]) < 0 ||
+					 items[left].compareTo(items[i]) < 0)) {
+			if (items[right].compareTo(items[left]) < 0) {
+				minChild = right;
+			} else {
+				minChild = left;
+			}
+			swap(i, minChild);
+			i = minChild;
+			left = i * 2 + 1;
+			right = i * 2 + 1;
+		}
+		if (left < size) {
+			if (items[left].compareTo(items[i]) < 0) {
+				swap(i, left);
+			}
+		}
+	}
+
+
+	private void swap(int i, int j) {
+		E temp = items[i];
+		items[i] = items[j];
+		items[j] = temp;
 	}
 }
